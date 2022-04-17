@@ -7,17 +7,16 @@ csv_files = glob.glob(os.path.join(path, "*.csv"))
 data = []
 for f in csv_files:
     df = pd.read_csv(f)
-
-    # df = pd.read_csv("BTCUSDT-trades-2022-03-03.csv")
-    print(len(df))
-
+    
+    #initializing volume, final trade value, and number of trades
     holdings = 0
     final_trade_value = 0
-    trade_value = 1000
-    mid_market_price = df.iloc[0, 1]
-    last_traded = 0
+    trade_value = 1000      #trade value cannot exceed 1000 as given bid and offer size = 1000 USD notional
+    mid_market_price = df.iloc[0, 1]   #price from which we the buy and sell margin of 3 basis points
+    last_traded = 0       #the last traded column
     trades = 0
     for i in range(1, len(df)):
+        #as we have to hedge the position as 5000 USD notionals, so ran an if loop while the final trade value is between [-5000, 5000]
         if 5000 >= final_trade_value >= -5000:
 
             if df.iloc[i, 1] >= mid_market_price + 1.5:
